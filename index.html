@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FocusLens — ResNet18 Explainability</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">Focus<span>Lens</span></a>
+    <div class="model-badge"><i></i> ResNet18 · ImageNet-1K</div>
+  </header>
+  <main>
+    <section class="hero">
+      <p class="eyebrow">MODEL EXPLAINABILITY WORKBENCH</p>
+      <h1>See what drives<br>the <em>decision.</em></h1>
+      <p class="lede">Classify any image with ResNet18, then inspect the pixels that most influenced its prediction using Integrated Gradients.</p>
+    </section>
+
+    <section class="workspace" id="workspace">
+      <div class="upload-pane" id="uploadPane">
+        <label class="dropzone" id="dropzone" for="imageInput">
+          <input id="imageInput" type="file" accept="image/*" />
+          <div class="upload-icon">↑</div>
+          <strong>Drop an image here</strong>
+          <span>or <u>browse files</u> · JPG, PNG, WEBP</span>
+        </label>
+        <div class="baseline-control"><div><span class="control-label">FOUR BASELINE COMPARISON</span><small>Neutral, black, white, and blurred maps are generated together.</small></div></div>
+        <button id="analyzeButton" disabled>Analyze image <span>→</span></button>
+      </div>
+      <p class="hint">Tip: use a photo with a clear main subject for the most meaningful explanation.</p>
+    </section>
+
+    <section class="results hidden" id="results">
+      <div class="section-heading"><div><p class="eyebrow">ANALYSIS RESULT</p><h2>Prediction & visual evidence</h2></div><button class="text-button" id="newImage">Upload another image</button></div>
+      <div class="result-grid">
+        <article class="image-card"><div class="card-label">INPUT IMAGE</div><img id="inputPreview" alt="Uploaded input" /></article>
+        <article class="predictions-card">
+          <div class="card-label">TOP PREDICTIONS</div>
+          <div class="primary-pred"><span id="primaryConfidence"></span><h3 id="primaryLabel">—</h3><p>Selected class for explanation</p></div>
+          <div id="predictionList" class="prediction-list"></div>
+        </article>
+      </div>
+      <section class="maps-section raw-maps"><div class="maps-title"><p class="eyebrow">INTEGRATED GRADIENTS · BASELINE COMPARISON</p><p>Each row shows one baseline: the reference, the input with an overlay, and a standalone magma heatmap. Bright yellow regions carry the strongest evidence.</p></div><div class="maps-grid" id="explanationMaps"></div></section>
+      <section class="maps-section difference-section"><div class="maps-title"><p class="eyebrow">CHANGE FROM NEUTRAL BASELINE</p><p>Standalone night-vision maps isolate baseline effects. Cyan/green means stronger attribution than neutral; violet means weaker. Dark regions carry little evidence.</p></div><div class="difference-legend"><span class="red-key"></span> stronger &nbsp;&nbsp; <span class="blue-key"></span> weaker &nbsp;&nbsp; dark = little evidence</div><div class="maps-grid" id="differenceMaps"></div></section>
+      <div class="insight-grid">
+        <article><p class="card-label">HOW TO READ THIS</p><p>Orange regions support the selected class while blue regions reduce its score. Focus should usually align with the subject, not background, text, or framing artifacts.</p></article>
+        <article><p class="card-label">BASELINE CHECK</p><p>The maps need not match: each reference follows a different path to the image. Strong agreement suggests robust evidence; a large shift indicates baseline-sensitive attribution.</p><p class="metric" id="metrics"></p></article>
+      </div>
+    </section>
+  </main>
+  <div class="loading hidden" id="loading"><div class="spinner"></div><strong>Tracing the model’s decision…</strong><span>Running Integrated Gradients</span></div>
+  <script src="/app.js"></script>
+</body>
+</html>
